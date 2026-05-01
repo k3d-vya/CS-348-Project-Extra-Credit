@@ -16,16 +16,19 @@ app.secret_key = os.environ.get("SECRET_KEY", "change-me-in-production")
 # ─────────────────────────────────────────────
 #  Database connection helper
 # ─────────────────────────────────────────────
-db_pool = pooling.MySQLConnectionPool(
-    pool_name="diagnosis_pool",
-    pool_size=5,
-    host=os.environ.get("DB_HOST", "localhost"),
-    user=os.environ.get("DB_USER", "root"),
-    password=os.environ.get("DB_PASSWORD", ""),
-    database=os.environ.get("DB_NAME", "diagnosis_db"),
-)
+db_pool = None
 
 def get_db():
+    global db_pool
+    if db_pool is None:
+        db_pool = pooling.MySQLConnectionPool(
+            pool_name="diagnosis_pool",
+            pool_size=5,
+            host=os.environ.get("DB_HOST", "localhost"),
+            user=os.environ.get("DB_USER", "root"),
+            password=os.environ.get("DB_PASSWORD", ""),
+            database=os.environ.get("DB_NAME", "diagnosis_db"),
+        )
     return db_pool.get_connection()
 
 
