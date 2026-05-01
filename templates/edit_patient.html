@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %}Edit Patient #{{ patient.patient_id }}{% endblock %}
+
+{% block content %}
+<h1>Edit Patient #{{ patient.patient_id }}</h1>
+
+<form method="POST" action="{{ url_for('edit_patient', patient_id=patient.patient_id) }}">
+
+  <fieldset>
+    <legend>Patient Info</legend>
+    <div class="form-row">
+      <label for="age">Age</label>
+      <input type="number" id="age" name="age" min="1" max="120"
+             value="{{ patient.age }}" required>
+    </div>
+    <div class="form-row">
+      <label for="gender">Gender</label>
+      <select id="gender" name="gender" required>
+        {% for opt in ['Male','Female','Other'] %}
+          <option {% if patient.gender == opt %}selected{% endif %}>{{ opt }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-row">
+      <label for="blood_pressure">Blood Pressure</label>
+      <select id="blood_pressure" name="blood_pressure" required>
+        {% for opt in ['Low','Normal','High'] %}
+          <option {% if patient.blood_pressure == opt %}selected{% endif %}>{{ opt }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-row">
+      <label for="cholesterol">Cholesterol</label>
+      <select id="cholesterol" name="cholesterol" required>
+        {% for opt in ['Low','Normal','High'] %}
+          <option {% if patient.cholesterol == opt %}selected{% endif %}>{{ opt }}</option>
+        {% endfor %}
+      </select>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Diagnosis</legend>
+    <!-- Dynamic dropdown from diseases table -->
+    <div class="form-row">
+      <label for="disease_id">Disease</label>
+      <select id="disease_id" name="disease_id" required>
+        <option value="">— select —</option>
+        {% for d in diseases %}
+          <option value="{{ d.disease_id }}"
+            {% if record and record.disease_id == d.disease_id %}selected{% endif %}>
+            {{ d.name }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-row">
+      <label for="outcome">Outcome</label>
+      <select id="outcome" name="outcome" required>
+        {% for opt in ['Positive','Negative','Recovered','Hospitalized','Managed'] %}
+          <option {% if record and record.outcome == opt %}selected{% endif %}>{{ opt }}</option>
+        {% endfor %}
+      </select>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Symptoms</legend>
+    <!-- Dynamic checkboxes from symptoms table, pre-checked from DB -->
+    <div class="checkbox-group">
+      {% for s in symptoms %}
+        <label class="checkbox-label">
+          <input type="checkbox" name="symptom_ids" value="{{ s.symptom_id }}"
+            {% if s.symptom_id in checked_symptoms %}checked{% endif %}>
+          {{ s.name }}
+        </label>
+      {% endfor %}
+    </div>
+  </fieldset>
+
+  <div class="form-actions">
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+    <a href="{{ url_for('patients_list') }}" class="btn">Cancel</a>
+  </div>
+</form>
+{% endblock %}

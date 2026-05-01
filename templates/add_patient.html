@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block title %}Add Patient{% endblock %}
+
+{% block content %}
+<h1>Add New Patient</h1>
+
+<!--
+  STAGE 2 POINT C:
+  The <select> for diseases and the symptom checkboxes below are populated
+  dynamically from the `diseases` and `symptoms` tables in MySQL.
+  See app.py  add_patient()  –  two SELECT queries fetch these lists
+  before the template is rendered.  Nothing is hard-coded in this HTML.
+-->
+
+<form method="POST" action="{{ url_for('add_patient') }}">
+
+  <fieldset>
+    <legend>Patient Info</legend>
+    <div class="form-row">
+      <label for="age">Age</label>
+      <input type="number" id="age" name="age" min="1" max="120" required>
+    </div>
+    <div class="form-row">
+      <label for="gender">Gender</label>
+      <select id="gender" name="gender" required>
+        <option value="">— select —</option>
+        <option>Male</option>
+        <option>Female</option>
+        <option>Other</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label for="blood_pressure">Blood Pressure</label>
+      <select id="blood_pressure" name="blood_pressure" required>
+        <option value="">— select —</option>
+        <option>Low</option>
+        <option>Normal</option>
+        <option>High</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label for="cholesterol">Cholesterol</label>
+      <select id="cholesterol" name="cholesterol" required>
+        <option value="">— select —</option>
+        <option>Low</option>
+        <option>Normal</option>
+        <option>High</option>
+      </select>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Diagnosis</legend>
+
+    <!-- ── Dynamic dropdown: built from diseases table ── -->
+    <div class="form-row">
+      <label for="disease_id">Disease</label>
+      <select id="disease_id" name="disease_id" required>
+        <option value="">— select —</option>
+        {% for d in diseases %}
+          <option value="{{ d.disease_id }}">{{ d.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="form-row">
+      <label for="outcome">Outcome</label>
+      <select id="outcome" name="outcome" required>
+        <option value="">— select —</option>
+        <option>Positive</option>
+        <option>Negative</option>
+        <option>Recovered</option>
+        <option>Hospitalized</option>
+        <option>Managed</option>
+      </select>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Symptoms</legend>
+    <!-- ── Dynamic checkboxes: built from symptoms table ── -->
+    <div class="checkbox-group">
+      {% for s in symptoms %}
+        <label class="checkbox-label">
+          <input type="checkbox" name="symptom_ids" value="{{ s.symptom_id }}">
+          {{ s.name }}
+        </label>
+      {% endfor %}
+    </div>
+  </fieldset>
+
+  <div class="form-actions">
+    <button type="submit" class="btn btn-primary">Add Patient</button>
+    <a href="{{ url_for('patients_list') }}" class="btn">Cancel</a>
+  </div>
+</form>
+{% endblock %}
