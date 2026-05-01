@@ -24,10 +24,10 @@ def get_db():
         db_pool = pooling.MySQLConnectionPool(
             pool_name="diagnosis_pool",
             pool_size=5,
-            host=os.environ.get("DB_HOST", "localhost"),
-            user=os.environ.get("DB_USER", "root"),
+            host=os.environ.get("DB_HOST", "mysql://root:LfKTiOeydiNumvOiHCceiegSvJNusJen@switchyard.proxy.rlwy.net:48259/railway"),
+            user=os.environ.get("DB_USER", ""),
             password=os.environ.get("DB_PASSWORD", ""),
-            database=os.environ.get("DB_NAME", "diagnosis_db"),
+            database=os.environ.get("DB_NAME", ""),
         )
     return db_pool.get_connection()
 
